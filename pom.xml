@@ -2,6 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ejemplo</groupId>
@@ -13,23 +14,23 @@
         <scala.version>2.12.18</scala.version>
         <spark.version>3.5.7</spark.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
-        <!-- Spark Core (provided) -->
+        <!-- Spark Core -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
             <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
 
-        <!-- Spark SQL (provided) -->
+        <!-- Spark SQL -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Scala Library -->
@@ -38,10 +39,26 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+
+        <!-- SLF4J simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <!-- 🔧 Forzar jackson-core a una versión compatible con Spark (2.15.2) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
             <!-- Scala Maven Plugin -->
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
@@ -57,47 +74,20 @@
                 </executions>
             </plugin>
 
-            <!-- Maven Shade Plugin solo para tu código, evitando incluir Spark -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>org/apache/spark/**</exclude>
-                                        <exclude>scala/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.ejemplo.AuthorsAges.AuthorsAges</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Exec Maven Plugin opcional -->
+            <!-- Exec Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.ejemplo.AuthorsAges.AuthorsAges</mainClass>
+                    <mainClass>com.ejemplo.AuthorsAges.CreateScalaTest</mainClass>
+                    <arguments>
+                        <argument>src/main/resources/blogs.json</argument>
+                    </arguments>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
+
 </project>
