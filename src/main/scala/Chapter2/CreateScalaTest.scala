@@ -1,4 +1,4 @@
-package com.ejemplo.AuthorsAges
+package Chapter2
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
