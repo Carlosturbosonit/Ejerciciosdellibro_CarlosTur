@@ -7,6 +7,8 @@ import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions.avg
 import java.io.File
 
+import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.types._
 
 object MainApp {
   def main(args: Array[String]): Unit = {
@@ -30,12 +32,12 @@ object MainApp {
   //  Chapter1.MnMcount.main(
   //    Array.empty[String]  // MnMcount no usa args, así que podemos pasar un array vacío
   //  )
-    Chapter3.FireIncidentsApp.main(Array.empty[String])
+   // Chapter3.FireIncidentsApp.main(Array.empty[String])
+Chapter3.RowExampleApp.main(Array.empty[String])
 
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.
-
     // Cerrar SparkSession al final
     spark.stop()
   }

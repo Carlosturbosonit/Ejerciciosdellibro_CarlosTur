@@ -3,6 +3,8 @@ package Chapter3
 import org.apache.spark.sql.SparkSession
 import java.io.File
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.{functions => F}
+import org.apache.spark.sql.functions.year
 
 object FireIncidentsApp {
   def main(args: Array[String]): Unit = {
@@ -45,6 +47,44 @@ object FireIncidentsApp {
       .where($"Address".isNotNull)
       .distinct()
       .show(10, false)
+
+    //Renaming
+    val newFireDF = df.withColumnRenamed("Incident Number", "IncidentNumbergretaerthan5")
+    newFireDF
+      .select("IncidentNumbergretaerthan5")
+      .where($"IncidentNumbergretaerthan5" > 5)
+      .show(5, false)
+
+
+
+
+
+    val fireTsDF = df
+      .withColumn("IncidentDate", to_timestamp(col("Incident Date"), "yyyy/MM/dd"))
+      .drop("Incident Date")
+
+
+    // Mostrar las 5 primeras filas de todo el DataFrame
+    fireTsDF.show(5, false)
+
+    // Mostrar solo la columna IncidentDate
+    fireTsDF.select("IncidentDate").show(5, false)
+
+    // Mostrar los años distintos de IncidentDate
+
+    fireTsDF
+      .select(year($"IncidentDate").alias("Year"))
+      .distinct()
+      .orderBy("Year")
+      .show()
+
+
+
+    fireTsDF
+      .select(F.sum("Fire Injuries"), F.avg("Suppression Units"),
+        F.min("Suppression Units"), F.max("Suppression Units"))
+      .show()
+
 
 
     // =========================
