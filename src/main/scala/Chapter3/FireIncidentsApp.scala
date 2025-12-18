@@ -2,6 +2,7 @@ package Chapter3
 
 import org.apache.spark.sql.SparkSession
 import java.io.File
+import org.apache.spark.sql.functions._
 
 object FireIncidentsApp {
   def main(args: Array[String]): Unit = {
@@ -18,6 +19,7 @@ object FireIncidentsApp {
       .appName("FireIncidentsApp")
       .master("local[*]")
       .getOrCreate()
+    import spark.implicits._
 
     // Leer CSV desde resources
     val csvPath = getClass.getResource("/Datasets/Fire_Incidents_20251217.csv").getPath
@@ -31,24 +33,38 @@ object FireIncidentsApp {
     // Mostrar primeras filas
     df.show(5)
 
+    //Añadir transformations y actions
+    df
+      .select("Address")
+      .where(col("Address").isNotNull)
+      .agg(countDistinct(col("Address")).alias("DistinctAddress"))
+      .show()
+
+    df
+      .select("Address")
+      .where($"Address".isNotNull)
+      .distinct()
+      .show(10, false)
+
+
     // =========================
     // Guardar como archivo Parquet
     // =========================
-    val parquetPath = "C:/Users/carlos.tur/IdeaProjects/spark-scala-app/output/fire_incidents.parquet"
-    df.write
-      .mode("overwrite") // sobrescribe si ya existe
-      .parquet(parquetPath)
-    println(s"Archivo Parquet guardado en: $parquetPath")
+    //val parquetPath = "C:/Users/carlos.tur/IdeaProjects/spark-scala-app/output/fire_incidents.parquet"
+   // df.write
+     // .mode("overwrite") // sobrescribe si ya existe
+     // .parquet(parquetPath)
+   // println(s"Archivo Parquet guardado en: $parquetPath")
 
     // =========================
     // Guardar como tabla Spark (en catálogo por defecto)
     // =========================
-    val parquetTable = "fire_incidents_table"
-    df.write
-      .mode("overwrite")
-      .format("parquet")
-      .saveAsTable(parquetTable)
-    println(s"Tabla Spark guardada como: $parquetTable")
+    //val parquetTable = "fire_incidents_table"
+   // df.write
+     // .mode("overwrite")
+     // .format("parquet")
+     // .saveAsTable(parquetTable)
+   // println(s"Tabla Spark guardada como: $parquetTable")
 
     // Cerrar SparkSession
     spark.stop()
