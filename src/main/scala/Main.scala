@@ -10,30 +10,25 @@ import java.io.File
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types._
 
+import org.apache.spark.sql.SparkSession
+
 object MainApp {
   def main(args: Array[String]): Unit = {
 
-    // Obtener SparkSession usando la función por defecto de Spark.scala
-    val spark: SparkSession = Spark.getSparkSession()
+    // Usar SparkSession centralizado
+    val spark: SparkSession = Spark.getSparkSession("SparkScalaApp")
 
-    // Nivel de logs
     spark.sparkContext.setLogLevel("ERROR")
 
-    import spark.implicits._
-
-    // Ejemplo: mostrar versión de Spark
     println(s"Versión de Spark: ${spark.version}")
-
     // Llamada a tu función de prueba
-  //  Chapter2.CreateScalaTest.main(
-   //   Array("C:\\Users\\carlos.tur\\IdeaProjects\\spark-scala-app\\src\\main\\resources\\blogs.json")
-   // )
+    //Chapter2.CreateScalaTest.run(spark)
+    //Chapter2.AuthorsAges.run(spark)
+    //Chapter1.MnMcount.run(spark)
+   // Chapter3.FireIncidentsApp.run(spark)
 
-  //  Chapter1.MnMcount.main(
-  //    Array.empty[String]  // MnMcount no usa args, así que podemos pasar un array vacío
-  //  )
-   // Chapter3.FireIncidentsApp.main(Array.empty[String])
-Chapter3.RowExampleApp.main(Array.empty[String])
+    //Chapter3.IoTApp.run(spark)
+    //Chapter3.RowExampleApp.run(spark)
 
 
     // Aquí puedes poner el resto de tu código usando `spark`

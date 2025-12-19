@@ -5,13 +5,8 @@ import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 
 object RowExampleApp {
-  def main(args: Array[String]): Unit = {
 
-    // Crear SparkSession
-    val spark = SparkSession.builder()
-      .appName("RowExample")
-      .master("local[*]")
-      .getOrCreate()
+  def run(spark: SparkSession): Unit = {
 
     // Definir esquema del DataFrame
     val schema = StructType(Seq(
@@ -24,8 +19,11 @@ object RowExampleApp {
     // Crear un Row
     val row = Row(350, true, "Learning Spark 2E", null)
 
-    // Crear DataFrame directamente desde Seq[Row]
-    val df = spark.createDataFrame(Seq(row), schema)
+    // ✅ CORRECTO: Seq -> RDD
+    val df = spark.createDataFrame(
+      spark.sparkContext.parallelize(Seq(row)),
+      schema
+    )
 
     // Mostrar DataFrame completo
     println("=== DataFrame completo ===")
@@ -38,8 +36,7 @@ object RowExampleApp {
     // Mostrar columnas con expresiones
     println("=== Columnas con expressions ===")
     df.select(col("id"), col("isActive"), col("title")).show(false)
-
-    spark.stop()
   }
 }
+
 

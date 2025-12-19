@@ -1,30 +1,20 @@
 package Chapter3
 
 import org.apache.spark.sql.SparkSession
-import java.io.File
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{functions => F}
-import org.apache.spark.sql.functions.year
+import java.util.Arrays
 
 object FireIncidentsApp {
-  def main(args: Array[String]): Unit = {
 
-    // Comprobación de winutils
-    val hadoopHome = System.getProperty("hadoop.home.dir", "C:\\hadoop")
-    println(s"HADOOP_HOME: $hadoopHome")
+  def run(spark: SparkSession): Unit = {
 
-    val winutilsPath = new File(s"$hadoopHome/bin/winutils.exe")
-    println(s"Winutils existe? ${winutilsPath.exists()}")
-
-    // Crear SparkSession (sin Hive)
-    val spark = SparkSession.builder()
-      .appName("FireIncidentsApp")
-      .master("local[*]")
-      .getOrCreate()
     import spark.implicits._
 
-    // Leer CSV desde resources
-    val csvPath = getClass.getResource("/Datasets/Fire_Incidents_20251217.csv").getPath
+    // =========================
+    // Leer CSV (path relativo)
+    // =========================
+    val csvPath = "src/main/resources/Datasets/Fire_Incidents_20251217.csv"
     println(s"Ruta del CSV: $csvPath")
 
     val df = spark.read
@@ -33,9 +23,11 @@ object FireIncidentsApp {
       .csv(csvPath)
 
     // Mostrar primeras filas
-    df.show(5)
+    df.show(5, false)
 
-    //Añadir transformations y actions
+    // =========================
+    // Transformations & Actions
+    // =========================
     df
       .select("Address")
       .where(col("Address").isNotNull)
@@ -48,29 +40,32 @@ object FireIncidentsApp {
       .distinct()
       .show(10, false)
 
-    //Renaming
-    val newFireDF = df.withColumnRenamed("Incident Number", "IncidentNumbergretaerthan5")
+    // =========================
+    // Renaming
+    // =========================
+    val newFireDF =
+      df.withColumnRenamed("Incident Number", "IncidentNumberGreaterThan5")
+
     newFireDF
-      .select("IncidentNumbergretaerthan5")
-      .where($"IncidentNumbergretaerthan5" > 5)
+      .select("IncidentNumberGreaterThan5")
+      .where($"IncidentNumberGreaterThan5" > 5)
       .show(5, false)
 
-
-
-
-
+    // =========================
+    // Fechas y timestamps
+    // =========================
     val fireTsDF = df
-      .withColumn("IncidentDate", to_timestamp(col("Incident Date"), "yyyy/MM/dd"))
+      .withColumn(
+        "IncidentDate",
+        to_timestamp(col("Incident Date"), "yyyy/MM/dd")
+      )
       .drop("Incident Date")
 
-
-    // Mostrar las 5 primeras filas de todo el DataFrame
     fireTsDF.show(5, false)
 
-    // Mostrar solo la columna IncidentDate
-    fireTsDF.select("IncidentDate").show(5, false)
-
-    // Mostrar los años distintos de IncidentDate
+    fireTsDF
+      .select("IncidentDate")
+      .show(5, false)
 
     fireTsDF
       .select(year($"IncidentDate").alias("Year"))
@@ -78,39 +73,26 @@ object FireIncidentsApp {
       .orderBy("Year")
       .show()
 
-
-
     fireTsDF
-      .select(F.sum("Fire Injuries"), F.avg("Suppression Units"),
-        F.min("Suppression Units"), F.max("Suppression Units"))
+      .select(
+        F.sum("Fire Injuries").alias("TotalFireInjuries"),
+        F.avg("Suppression Units").alias("AvgSuppressionUnits"),
+        F.min("Suppression Units").alias("MinSuppressionUnits"),
+        F.max("Suppression Units").alias("MaxSuppressionUnits")
+      )
       .show()
 
-
-
     // =========================
-    // Guardar como archivo Parquet
+    // Guardar como Parquet (path relativo)
     // =========================
-    //val parquetPath = "C:/Users/carlos.tur/IdeaProjects/spark-scala-app/output/fire_incidents.parquet"
-   // df.write
-     // .mode("overwrite") // sobrescribe si ya existe
-     // .parquet(parquetPath)
-   // println(s"Archivo Parquet guardado en: $parquetPath")
+    val parquetPath = "Chapter3/fire_incidents_parquet"
 
-    // =========================
-    // Guardar como tabla Spark (en catálogo por defecto)
-    // =========================
-    //val parquetTable = "fire_incidents_table"
-   // df.write
-     // .mode("overwrite")
-     // .format("parquet")
-     // .saveAsTable(parquetTable)
-   // println(s"Tabla Spark guardada como: $parquetTable")
+    fireTsDF.write
+      .mode("overwrite")
+      .parquet(parquetPath)
 
-    // Cerrar SparkSession
-    spark.stop()
+    println(s"Parquet guardado en: $parquetPath")
   }
 }
-
-
 
 
