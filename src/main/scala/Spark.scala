@@ -4,7 +4,7 @@ object Spark {
 
   def getSparkSession(
                        name: String = "spark-scala-app",
-                       hive: Boolean = false
+                       hive: Boolean = true
                      ): SparkSession = {
 
     val builder = SparkSession

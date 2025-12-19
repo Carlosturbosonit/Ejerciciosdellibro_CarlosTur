@@ -15,8 +15,8 @@ import org.apache.spark.sql.SparkSession
 object MainApp {
   def main(args: Array[String]): Unit = {
 
-    // Usar SparkSession centralizado
-    val spark: SparkSession = Spark.getSparkSession("SparkScalaApp")
+    // Usar SparkSession centralizado con Hive habilitado
+    val spark: SparkSession = Spark.getSparkSession("SparkScalaApp", hive = true)
 
     spark.sparkContext.setLogLevel("ERROR")
 
@@ -29,6 +29,9 @@ object MainApp {
 
     //Chapter3.IoTApp.run(spark)
     //Chapter3.RowExampleApp.run(spark)
+    //Chapter4.MtaDelaysApp.run(spark)
+    Chapter4.USFlightDelaysApp.run(spark)
+
 
 
     // Aquí puedes poner el resto de tu código usando `spark`

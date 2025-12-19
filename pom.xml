@@ -36,8 +36,8 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_${scala.version}</artifactId>
             <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
+
 
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-avro -->
