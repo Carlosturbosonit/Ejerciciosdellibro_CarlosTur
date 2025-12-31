@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Fri Dec 19 15:49:27 CET 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019b-3716-4fb4-00001ea36958 
-on database directory C:\Users\carlos.tur\IdeaProjects\spark-scala-app\metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@350d26f3 
+Wed Dec 31 11:09:51 CET 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019b-73e2-a435-00000e5b3da0 
+on database directory C:\Users\carlos.tur\IdeaProjects\spark-scala-app\metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@27c170f0 
 Loaded from file:/C:/Users/carlos.tur/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
-java.vendor=Amazon.com Inc.
-java.runtime.version=1.8.0_472-b08
+java.vendor=Microsoft
+java.runtime.version=11.0.29+7-LTS
 user.dir=C:\Users\carlos.tur\IdeaProjects\spark-scala-app
 os.name=Windows 11
 os.arch=amd64

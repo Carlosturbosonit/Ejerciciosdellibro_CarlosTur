@@ -15,7 +15,6 @@ object ManageundUnmanagetables {
   def run(spark: SparkSession): Unit = {
     // Path al CSV desde src
     val csvPath = "src/main/resources/Datasets/departuredelays.csv"
-
     // ======================================
     // 1. Crear base de datos (Hive must be enabled)
     // ======================================
@@ -53,9 +52,23 @@ object ManageundUnmanagetables {
          |OPTIONS (PATH '$csvPath')""".stripMargin)
 
     // ======================================
-    // 4. Crear vista temporal para queries rápidas
+    // 4. Crear vistas temporales para queries rápidas
     // ======================================
     flightsDF.createOrReplaceTempView("us_delay_flights_tbl")
+
+    // Vista temporal normal
+    spark.sql(
+      """CREATE OR REPLACE TEMP VIEW us_origin_airport_JFK_tmp_view AS
+        |SELECT date, delay, origin, destination
+        |FROM us_delay_flights_tbl
+        |WHERE origin = 'JFK'""".stripMargin)
+
+    // Vista temporal global
+    spark.sql(
+      """CREATE OR REPLACE GLOBAL TEMP VIEW us_origin_airport_SFO_global_tmp_view AS
+        |SELECT date, delay, origin, destination
+        |FROM us_delay_flights_tbl
+        |WHERE origin = 'SFO'""".stripMargin)
 
     println("===== US Flight Delays Dataset Info =====")
     flightsDF.show(5, truncate = false)
@@ -90,7 +103,38 @@ object ManageundUnmanagetables {
         | END AS Flight_Delays
         |FROM us_delay_flights_tbl
         |ORDER BY origin, delay DESC""".stripMargin).show(10)
+
+    // ======================================
+    // 6. Ejemplos de uso de vistas
+    // ======================================
+
+    // Acceder a la global temp view en SQL
+    println("===== Global Temp View SFO =====")
+    spark.sql("SELECT * FROM global_temp.us_origin_airport_SFO_global_tmp_view").show(5)
+
+    // Acceder a la temp view normal en SQL
+    println("===== Temp View JFK =====")
+    spark.sql("SELECT * FROM us_origin_airport_JFK_tmp_view").show(5)
+
+    // Acceder a la temp view normal en Scala
+    val jfkDF = spark.read.table("us_origin_airport_JFK_tmp_view")
+    jfkDF.show(5)
+
+    // ======================================
+    // 7. Ejemplos para eliminar vistas
+    // ======================================
+
+    // En SQL
+    spark.sql("DROP VIEW IF EXISTS us_origin_airport_JFK_tmp_view")
+    spark.sql("DROP VIEW IF EXISTS global_temp.us_origin_airport_SFO_global_tmp_view")
+
+    // En Scala
+    // spark.catalog.dropTempView("us_origin_airport_JFK_tmp_view")
+    // spark.catalog.dropGlobalTempView("us_origin_airport_SFO_global_tmp_view")
   }
 }
-
-
+//access metadata
+// In Scala/Python
+//spark.catalog.listDatabases()
+//spark.catalog.listTables()
+//spark.catalog.listColumns("us_delay_flights_tbl")
