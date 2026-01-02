@@ -1,6 +1,7 @@
 package Chapter5
 
-import org.apache.spark.sql.{SaveMode, SparkSession}
+import com.azure.cosmos.spark._
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 object AzureConnect {
 
@@ -15,30 +16,50 @@ object AzureConnect {
          ): Unit = {
 
     // ======================================
-    // 1. Crear DataFrame desde Cosmos DB
+    // 1️⃣ Crear configuración para lectura
     // ======================================
-    val df = spark.read.format("cosmos.oltp")
-      .option("spark.cosmos.accountEndpoint", accountEndpoint)
-      .option("spark.cosmos.accountKey", masterKey)
-      .option("spark.cosmos.database", database)
-      .option("spark.cosmos.container", container)
-      .option("spark.cosmos.read.customQuery", query)
+    val readConfig: Map[String, String] = Map(
+      "spark.cosmos.accountEndpoint" -> accountEndpoint,
+      "spark.cosmos.accountKey" -> masterKey,
+      "spark.cosmos.database" -> database,
+      "spark.cosmos.container" -> container,
+      "spark.cosmos.read.customQuery" -> query,
+      "spark.cosmos.read.partitioning.strategy" -> "Restrictive", // optional
+      "spark.cosmos.read.inferSchema.enabled" -> "true"
+    )
+
+    // ======================================
+    // 2️⃣ Leer datos desde Cosmos DB
+    // ======================================
+    val df: DataFrame = spark.read
+      .format("cosmos.oltp")
+      .options(readConfig)
       .load()
 
     println("=== Cosmos DB DataFrame ===")
     df.show(5, truncate = false)
 
     // ======================================
-    // 2. Escritura en Cosmos DB (upsert)
+    // 3️⃣ Crear configuración para escritura
     // ======================================
-    df.write.format("cosmos.oltp")
-      .option("spark.cosmos.accountEndpoint", accountEndpoint)
-      .option("spark.cosmos.accountKey", masterKey)
-      .option("spark.cosmos.database", database)
-      .option("spark.cosmos.container", container)
+    val writeConfig: Map[String, String] = Map(
+      "spark.cosmos.accountEndpoint" -> accountEndpoint,
+      "spark.cosmos.accountKey" -> masterKey,
+      "spark.cosmos.database" -> database,
+      "spark.cosmos.container" -> container,
+      "spark.cosmos.write.strategy" -> "ItemOverwrite" // upsert
+    )
+
+    // ======================================
+    // 4️⃣ Escritura en Cosmos DB (upsert)
+    // ======================================
+    df.write
+      .format("cosmos.oltp")
+      .options(writeConfig)
       .mode(writeMode)
       .save()
 
     println("=== DataFrame escrito en Cosmos DB ===")
   }
 }
+

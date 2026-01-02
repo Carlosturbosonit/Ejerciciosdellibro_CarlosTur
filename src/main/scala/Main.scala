@@ -1,6 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{SparkSession, Dataset}
+import org.apache.spark.sql.{SparkSession, DataFrame, SaveMode}
 
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.Row
@@ -93,22 +94,42 @@ object MainApp {
     // Run the JDBCConnect
 
     // === 3️⃣ Configuración JDBC para PostgreSQL ===
-    val pgUrl = "jdbc:postgresql://localhost:5432/clothes_dataset" // tu DB
-    val pgTable = "customers"                                   // tu tabla
-    val pgUser = "postgres"                                  // usuario
-    val pgPassword = "11@Carlos$"                              // contraseña
+    //val pgUrl = "jdbc:postgresql://localhost:5432/clothes_dataset" // tu DB
+    //val pgTable = "customers"                                   // tu tabla
+    //val pgUser = "postgres"                                  // usuario
+   // val pgPassword = "11@Carlos$"                              // contraseña
 
     // Ejecutar tu código JDBC
-    Chapter5.JDBCConnect.run(
-      spark,
-      pgUrl,
-      pgTable,
-      pgUser,
-      pgPassword
-    )
+    //Chapter5.JDBCConnect.run(
+     // spark,
+     // pgUrl,
+      //pgTable,
+     // pgUser,
+     // pgPassword
+    //)
+
+    // === 2️⃣ Parámetros de conexión a Cosmos DB ===
+   // val accountEndpoint = "https://<YOUR_ACCOUNT>.documents.azure.com:443/"
+   // val masterKey       = "<YOUR_MASTER_KEY>"
+    //val database        = "<YOUR_DATABASE>"
+   // val container       = "<YOUR_CONTAINER>"
+
+    // Ejemplo de query (puedes adaptarla)
+    //val query = "SELECT c.colA, c.coln FROM c WHERE c.origin = 'SEA'"
+
+    // === 3️⃣ Llamada a AzureConnect ===
+   // Chapter5.AzureConnect.run(
+     // spark,
+    //  accountEndpoint,
+     // masterKey,
+     // database,
+     // container,
+     // query,
+     // SaveMode.Overwrite // o SaveMode.Append si quieres agregar
+    //)
 
 
-    //Chapter5.TempArrays.run(spark)
+    Chapter5.TempArrays.run(spark)
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.
