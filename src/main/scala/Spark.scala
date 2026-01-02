@@ -23,6 +23,7 @@ object Spark {
       .appName(name)
       .master("local[*]")
       .config("spark.local.dir", sparkLocalDir)
+
       // Para spark.sql.warehouse.dir, aquí usamos path normal
       .config("spark.sql.warehouse.dir", warehouseDir)
       .config("spark.hadoop.tmp.dir", hadoopTmp)

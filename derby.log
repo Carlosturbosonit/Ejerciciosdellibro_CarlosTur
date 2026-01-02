@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Wed Dec 31 11:09:51 CET 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019b-73e2-a435-00000e5b3da0 
+Wed Dec 31 12:26:31 CET 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019b-7428-d38c-00000da2cf10 
 on database directory C:\Users\carlos.tur\IdeaProjects\spark-scala-app\metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@27c170f0 
 Loaded from file:/C:/Users/carlos.tur/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Microsoft

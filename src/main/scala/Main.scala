@@ -34,6 +34,10 @@ object MainApp {
     println("TEMP=" + sys.env.getOrElse("TEMP","<no>"))
     println("TMP=" + sys.env.getOrElse("TMP","<no>"))
 
+    println("scala-library location = " + classOf[scala.Option[_]].getProtectionDomain.getCodeSource.getLocation)
+    println("scala-collection-compat? = " + Option(classOf[scala.collection.Iterable[_]].getProtectionDomain.getCodeSource).map(_.getLocation).getOrElse("n/a"))
+
+
     import scala.sys.process._
 
     println("java.version=" + System.getProperty("java.version"))
@@ -83,8 +87,28 @@ object MainApp {
     //Chapter4.MtaDelaysApp.run(spark)
     //Chapter4.USFlightDelaysApp.run(spark)
     //Chapter4.ManageundUnmanagetables.run(spark)
-     Chapter4.Framesandtables.run(spark)
+     //Chapter4.Framesandtables.run(spark)
+    //Chapter5.CubeFunction.run(spark)
+    //Chapter5.AzureConnect.run(spark)
+    // Run the JDBCConnect
 
+    // === 3️⃣ Configuración JDBC para PostgreSQL ===
+    val pgUrl = "jdbc:postgresql://localhost:5432/clothes_dataset" // tu DB
+    val pgTable = "customers"                                   // tu tabla
+    val pgUser = "postgres"                                  // usuario
+    val pgPassword = "11@Carlos$"                              // contraseña
+
+    // Ejecutar tu código JDBC
+    Chapter5.JDBCConnect.run(
+      spark,
+      pgUrl,
+      pgTable,
+      pgUser,
+      pgPassword
+    )
+
+
+    //Chapter5.TempArrays.run(spark)
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.
