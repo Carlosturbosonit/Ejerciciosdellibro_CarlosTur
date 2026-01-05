@@ -129,7 +129,11 @@ object MainApp {
     //)
 
 
-    Chapter5.TempArrays.run(spark)
+    //Chapter5.TempArrays.run
+    //Chapter6.Bloggers.run(spark)
+    //Chapter6.UsageJob.run(spark)
+    //Chapter6.TransformationDF_DT.run(spark)
+    Chapter7.SparkConfigJob.run()
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.
