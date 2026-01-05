@@ -54,16 +54,9 @@ object MainApp {
     runWhere("msvcr120.dll")
     runWhere("msvcp120.dll")
 
-    val dll = "C:\\hadoop\\bin\\hadoop.dll"
-    println("Loading: " + dll)
-    System.load(dll)
-    println("OK: hadoop.dll loaded")
-
-    System.load(dll)
-    println("Loaded: " + dll)
-    println("Native loaded? " + org.apache.hadoop.util.NativeCodeLoader.isNativeCodeLoaded())
     // === 2️⃣ Crear SparkSession con Hive habilitado ===
     val spark: SparkSession = Spark.getSparkSession("SparkScalaApp", hive = true)
+    import spark.implicits._
     spark.sparkContext.setLogLevel("ERROR")
     println("CONF hive.downloaded.resources.dir = " +
       spark.sparkContext.hadoopConfiguration.get("hive.downloaded.resources.dir"))
@@ -133,7 +126,11 @@ object MainApp {
     //Chapter6.Bloggers.run(spark)
     //Chapter6.UsageJob.run(spark)
     //Chapter6.TransformationDF_DT.run(spark)
-    Chapter7.SparkConfigJob.run()
+    //Chapter7.SparkConfigJob.run()
+    //Chapter7.CacheExampleJob.run()
+    //Chapter7.JoinExampleJob.run()
+    //Chapter7.BucketedJoinJob.run()
+    Chapter9.DeltaLakesJob.run(spark)
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.

@@ -23,14 +23,15 @@ object Spark {
       .appName(name)
       .master("local[*]")
       .config("spark.local.dir", sparkLocalDir)
-
-      // Para spark.sql.warehouse.dir, aquí usamos path normal
       .config("spark.sql.warehouse.dir", warehouseDir)
       .config("spark.hadoop.tmp.dir", hadoopTmp)
       .config("spark.hadoop.hive.exec.scratchdir", hiveScratch)
       .config("spark.hadoop.hive.downloaded.resources.dir", hiveResources)
-      // Evita NativeIO en Windows
       .config("spark.hadoop.io.native.lib.available", "false")
+
+      // ✅ Configuración Delta
+      .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
 
     if (hive) builder.enableHiveSupport().getOrCreate()
     else builder.getOrCreate()

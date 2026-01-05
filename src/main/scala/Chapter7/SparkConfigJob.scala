@@ -62,7 +62,12 @@ object SparkConfigJob {
 
       // Time an executor can stay idle before Spark removes it
       // spark.dynamicAllocation.executorIdleTimeout -> 2min  // 2 minutes
-//
+      // Maximum number of bytes to pack into a single partition when reading files
+      // spark.sql.files.maxPartitionBytes -> 134217728 (default 128 MB)
+
+      // Setting Partitions
+     // val numDF = spark.range(1000L * 1000 * 1000).repartition(16)
+      //numDF.rdd.getNumPartitions
     }
   }
 }
