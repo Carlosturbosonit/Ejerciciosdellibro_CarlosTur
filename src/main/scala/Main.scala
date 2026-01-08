@@ -130,7 +130,8 @@ object MainApp {
     //Chapter7.CacheExampleJob.run()
     //Chapter7.JoinExampleJob.run()
     //Chapter7.BucketedJoinJob.run()
-    Chapter9.DeltaLakesJob.run(spark)
+    //Chapter9.DeltaLakesJob.run(spark)
+    sparksqlexercises.GooglePlayAnalysis.run(spark)
 
     // Aquí puedes poner el resto de tu código usando `spark`
     // Por ejemplo, leer CSV, procesar DataFrame, etc.
